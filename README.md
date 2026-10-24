@@ -1,86 +1,50 @@
-# Student Insights Lab
+# IFHE Workflow Analysis & Curriculum Audit
 
-A browser-based, educational capstone prototype for exploring **synthetic student records**, checking data quality, comparing course credits, and producing a simple report. It is designed to demonstrate a workflow from data intake through validation and descriptive analytics.
+An academic project combining two areas of college process improvement: **No-Due Clearance Workflow Analysis** and **Computer Science & Engineering Curriculum Audit and Redesign**.
 
-> **Privacy and scope:** This project uses fictional records only. It is not affiliated with or connected to an institutional Student Information System (SIS), and it does not access IFHE systems or real student data. Do not enter or commit real student information, SIS credentials, tokens, or other private institutional information.
+## Project Overview
 
-## Features
+This repository demonstrates how workflow analysis, synthetic data, curriculum mapping, testing, and evidence-based recommendations can support improvements in educational administration and computer science education.
 
-- Search, filter, and sort a fictional record table by study year, score, ID, or course credits.
-- View a score summary and a simple score-distribution chart.
-- Run checks for missing values, invalid scores/years, duplicate IDs, and unknown course codes.
-- Add a fictional record with basic validation, or repair deliberately flawed demo records.
-- Select courses and calculate the selected credit total.
-- Export the currently visible records as CSV and download a text report.
-- Run entirely in a modern browser with no build process, server, external JavaScript library, or API key.
+### Task 1: No-Due Clearance Workflow Analysis
 
-## Run locally
+This task examines a proposed No-Due Clearance process, including request submission, information validation, departmental verification, approval, and final status communication.
 
-1. Download or clone this repository.
-2. Open `index.html` in a current desktop or mobile browser.
-3. Try the filters, quality checks, course selection, and report export.
+**Key components:**
+- Workflow mapping and responsibility identification
+- Synthetic request and department-check datasets
+- Fictional evidence log and data dictionary
+- Proposed workflow statuses and approval boundaries
+- Five test scenarios: normal request, missing information, duplicate request, unauthorized request, and failed step
+- Exception handling and recovery procedures
+- Illustrative ROI and staff-effort calculations
 
-All user edits remain in the current page session and are not saved to a database. Refreshing the page resets the app to its built-in example records.
+The example ROI model estimates a saving of 9 minutes per request, assuming 24 minutes of baseline effort and 15 minutes under the proposed process. At an assumed 100 requests per month, this represents 15 staff-hours saved monthly. These figures are illustrative, not measured institutional results.
 
-## Publish with GitHub Pages
+### Task 2: Curriculum Audit and Redesign
 
-1. Create a GitHub repository named `student-insights-lab` (or another name you prefer).
-2. Upload the contents of this folder, keeping `index.html` at the repository root.
-3. Open **Settings → Pages** in the repository.
-4. Under **Build and deployment**, choose **Deploy from a branch**.
-5. Select branch `main` and folder `/(root)`, then click **Save**.
-6. Wait for the GitHub Pages deployment to complete; the Pages section will show the published URL.
+This task evaluates the supplied CSE course list and proposes improvements to curriculum relevance, practical learning, and industry alignment.
 
-The app is static, so no build command or environment variables are required.
+**Key components:**
+- Course and credit mapping
+- KEEP, UPDATE, REDUCE, and ADD recommendations
+- Reasons supporting proposed curriculum changes
+- Comparison with three real, dated job descriptions
+- AI-assisted exercises for five selected subjects
+- Prompt, model/tool, date, output, and verification documentation
+- Faculty or graduate feedback where available
+- A practical lab or capstone connected to the No-Due Clearance workflow
 
-### Optional Git command-line upload
+The final curriculum should be validated against the applicable official syllabus, programme regulations, admission batch, prerequisites, and credit requirements.
 
-Replace `YOUR-USERNAME` with your GitHub username after creating an empty repository on GitHub:
+## Project Integration
 
-```bash
-git init
-git add .
-git commit -m "Add Student Insights Lab prototype"
-git branch -M main
-git remote add origin https://github.com/YOUR-USERNAME/student-insights-lab.git
-git push -u origin main
-```
+The No-Due Clearance workflow can serve as a practical computing project for requirements analysis, database design, user-interface development, authorization, workflow automation, exception handling, and software testing.
 
-If the repository already has a README or license created on GitHub, clone that repository first and copy these project files into it to avoid unrelated initial-history conflicts.
+## Data Integrity
 
-## Repository layout
+All workflow datasets and fictional evidence are synthetic and intended for academic demonstration. They do not represent verified IFHE records or an officially approved institutional process. Curriculum recommendations remain proposals until supporting official documents and external evidence are verified.
 
-```text
-student-insights-lab/
-├── index.html
-├── README.md
-├── LICENSE
-├── .gitignore
-├── sample_data/
-│   └── synthetic_student_records.csv
-└── docs/
-    ├── DATA_DICTIONARY.md
-    ├── PROJECT_SCOPE.md
-    └── TEST_PLAN.md
-```
+## Expected Outcomes
 
-## Sample data
-
-`sample_data/synthetic_student_records.csv` mirrors the format of the built-in examples and includes two deliberate data-quality defects: one missing score and one score above 100. These defects are intentional so the quality-check workflow can be demonstrated. The web app currently uses its built-in JavaScript sample records; it does not load this CSV file automatically.
-
-The course titles and credit values in the prototype are for demonstration. Verify them against the official programme syllabus, admission batch, and curriculum version before using them for a formal academic audit.
-
-## Validation checklist
-
-See [`docs/TEST_PLAN.md`](docs/TEST_PLAN.md) for a manual smoke-test checklist. This repository does not claim to have an automated browser test suite.
-
-## Limitations
-
-- No authentication, database, server, SIS integration, or persistent storage.
-- Synthetic scores are not evidence of real student performance and must not be used for academic decisions.
-- The “repair demo issues” action is illustrative only; it fills a missing score with 75 and clamps invalid scores to 0–100. That is not an acceptable repair policy for real academic records. In a real workflow, ambiguous values should be reviewed by an authorized owner and corrected from an approved source.
-- A production deployment would require institutional approval, data minimization, access controls, audit logging, privacy/security review, and approved integrations.
-
-## License
-
-Released under the MIT License. See [`LICENSE`](LICENSE).
+The project demonstrates workflow modelling, test-case design, operational efficiency estimation, curriculum evaluation, and practical application of computing concepts to educational administration.
