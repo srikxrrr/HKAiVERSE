@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Insights Lab</title>
+<style>
+:root {
+  --site-primary: #174a72;
+  --site-on-primary: #ffffff;
+  --site-secondary: #d8eaf4;
+  --site-on-secondary: #16364b;
+  --site-background: #f3f7fa;
+  --site-on-background: #182b3a;
+  --site-font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-font-heading: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+  --surface: light-dark(#ffffff, #17232e);
+  --surface-soft: light-dark(#f5f9fc, #1c2d3b);
+  --text: light-dark(#182b3a, #eef5fa);
+  --muted: light-dark(#5a6d7c, #b1c2cf);
+  --border: light-dark(#d8e3eb, #344957);
+  --good: light-dark(#16734a, #70d6a4);
+  --warn: light-dark(#8b5a00, #ffce76);
+}
+* { box-sizing: border-box; }
+html { color-scheme: light dark; }
+body { margin: 0; font-family: var(--site-font-body); background: var(--site-background); color: var(--site-on-background); }
+#app { min-height: 100vh; background-color: var(--site-background); color: var(--site-on-background); border-radius: 0; }
+header { background: var(--site-primary); color: var(--site-on-primary); padding: calc(30px * var(--site-spacing-scale)) max(20px, calc((100vw - 1180px)/2)); }
+.eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: .72rem; opacity: .8; font-weight: 700; }
+h1 { font-family: var(--site-font-heading); font-size: calc(2.25rem * var(--site-heading-scale)); line-height: 1.1; margin: 10px 0; }
+header p { max-width: 760px; line-height: 1.55; opacity: .9; margin: 0; }
+.header-tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+.header-tags span { border:1px solid #ffffff55; border-radius:999px; padding:6px 10px; font-size:.8rem; }
+main { max-width: 1180px; margin: 0 auto; padding: calc(24px * var(--site-spacing-scale)) 18px 48px; }
+.notice { border:1px solid var(--border); background:var(--surface); padding:14px 16px; border-radius:calc(14px * var(--site-radius-scale)); display:flex; gap:12px; align-items:flex-start; margin-bottom:20px; }
+.notice strong { display:block; margin-bottom:3px; }
+.stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:20px; }
+.stat, .panel { background:var(--surface); border:1px solid var(--border); border-radius:calc(16px * var(--site-radius-scale)); }
+.stat { padding:18px; }
+.stat .label { color:var(--muted); font-size:.84rem; }
+.stat .value { font-size:1.8rem; font-weight:750; margin-top:6px; }
+.stat .detail { color:var(--muted); font-size:.78rem; margin-top:4px; }
+.layout { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr); gap:16px; align-items:start; }
+.panel { padding:20px; margin-bottom:16px; }
+h2 { font-size:calc(1.18rem * var(--site-heading-scale)); margin:0 0 5px; }
+h3 { font-size:1rem; margin:0 0 10px; }
+.sub { color:var(--muted); font-size:.88rem; line-height:1.45; margin:0 0 16px; }
+.controls { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+label { display:block; font-size:.83rem; font-weight:650; margin-bottom:6px; }
+input, select, button { font:inherit; }
+input, select { width:100%; padding:10px 11px; border:1px solid var(--border); border-radius:9px; background:var(--surface); color:var(--text); }
+button { border:1px solid var(--site-primary); background:var(--site-primary); color:var(--site-on-primary); padding:10px 13px; border-radius:10px; cursor:pointer; font-weight:650; }
+button.secondary { background:var(--surface); color:var(--text); border-color:var(--border); }
+button:hover { filter:brightness(1.08); }
+button:focus-visible, input:focus-visible, select:focus-visible { outline:3px solid #56a8db; outline-offset:2px; }
+.btn-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+.table-wrap { overflow:auto; max-height:420px; border:1px solid var(--border); border-radius:10px; }
+table { width:100%; border-collapse:collapse; font-size:.88rem; }
+th,td { padding:10px 11px; border-bottom:1px solid var(--border); text-align:left; white-space:nowrap; }
+th { position:sticky; top:0; background:var(--surface-soft); z-index:1; font-size:.78rem; color:var(--muted); }
+tr:last-child td { border-bottom:0; }
+tr:hover td { background:var(--surface-soft); }
+.pill { display:inline-block; padding:3px 8px; border-radius:999px; font-size:.75rem; background:var(--site-secondary); color:var(--site-on-secondary); }
+.bar-list { display:grid; gap:13px; margin-top:16px; }
+.bar-row { display:grid; grid-template-columns:105px 1fr 35px; gap:10px; align-items:center; font-size:.85rem; }
+.track { height:10px; background:var(--surface-soft); border-radius:999px; overflow:hidden; border:1px solid var(--border); }
+.fill { height:100%; background:var(--site-primary); border-radius:999px; }
+.metric-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:14px; }
+.metric { background:var(--surface-soft); padding:12px; border-radius:10px; }
+.metric small { color:var(--muted); display:block; }
+.metric strong { font-size:1.25rem; display:block; margin-top:3px; }
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.form-grid .full { grid-column:1/-1; }
+.checklist { display:grid; gap:9px; }
+.check { display:flex; gap:9px; align-items:flex-start; font-size:.9rem; line-height:1.4; }
+.check input { width:auto; margin-top:4px; }
+.result { margin-top:12px; padding:12px; border-radius:10px; background:var(--surface-soft); line-height:1.5; }
+footer { border-top:1px solid var(--border); padding-top:16px; color:var(--muted); font-size:.82rem; line-height:1.5; }
+@media (max-width:820px) { .stats { grid-template-columns:repeat(2,minmax(0,1fr)); } .layout { grid-template-columns:1fr; } }
+@media (max-width:480px) { h1 { font-size:calc(1.8rem * var(--site-heading-scale)); } .controls,.form-grid { grid-template-columns:1fr; } .form-grid .full { grid-column:auto; } .stat { padding:13px; } .bar-row { grid-template-columns:85px 1fr 25px; } }
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+  <div class="eyebrow">CSE / AI & Data Science · Capstone prototype</div>
+  <h1>Student Insights Lab</h1>
+  <p>A working demo for exploring synthetic student records, validating data quality, comparing course credits and producing a simple analytics report. No real SIS account or student data is connected.</p>
+  <div class="header-tags"><span>Python-style data workflow</span><span>SQL-ready concepts</span><span>Privacy-first demo</span></div>
+</header>
+<main>
+  <div class="notice"><span aria-hidden="true">🛡️</span><div><strong>Synthetic data only</strong>This demo runs locally in the preview. Records are fictional, and edits are held in the current page session. Do not enter real student names, IDs, grades or SIS credentials.</div></div>
+  <section class="stats" aria-label="Dataset summary">
+    <div class="stat"><div class="label">Visible records</div><div class="value" id="statRows">12</div><div class="detail">After current filters</div></div>
+    <div class="stat"><div class="label">Average score</div><div class="value" id="statAverage">—</div><div class="detail">Out of 100</div></div>
+    <div class="stat"><div class="label">Credit total</div><div class="value" id="statCredits">—</div><div class="detail">Unique courses in catalog</div></div>
+    <div class="stat"><div class="label">Data issues</div><div class="value" id="statIssues">—</div><div class="detail">Missing or invalid fields</div></div>
+  </section>
+  <div class="layout">
+    <div>
+      <section class="panel">
+        <h2>Explore synthetic student records</h2>
+        <p class="sub">Filter by programme year and score range. Search using fictional record IDs or course names.</p>
+        <div class="controls">
+          <div><label for="yearFilter">Study year</label><select id="yearFilter"><option value="all">All years</option><option value="1">Year 1</option><option value="2">Year 2</option><option value="3">Year 3</option><option value="4">Year 4</option></select></div>
+          <div><label for="minScore">Minimum score</label><input id="minScore" type="number" min="0" max="100" value="0"></div>
+          <div><label for="search">Search records</label><input id="search" type="search" placeholder="e.g. SYN-104 or Data"></div>
+          <div><label for="sortBy">Sort by</label><select id="sortBy"><option value="id">Record ID</option><option value="score-high">Score: high to low</option><option value="score-low">Score: low to high</option><option value="credits">Course credits</option></select></div>
+        </div>
+        <div class="btn-row"><button id="resetFilters" class="secondary" type="button">Reset filters</button><button id="exportCsv" type="button">Export visible CSV</button></div>
+        <div class="table-wrap" style="margin-top:16px"><table><thead><tr><th>Fictional ID</th><th>Year</th><th>Course</th><th>Credits</th><th>Score</th><th>Data status</th></tr></thead><tbody id="recordsBody"></tbody></table></div>
+        <p class="sub" id="tableNote" style="margin:10px 0 0"></p>
+      </section>
+      <section class="panel">
+        <h2>Data quality checks</h2>
+        <p class="sub">The checks run against the full synthetic dataset, not just the filtered table.</p>
+        <div id="qualityResults" class="checklist"></div>
+        <div class="btn-row"><button id="runChecks" type="button">Run checks again</button><button id="repairData" class="secondary" type="button">Repair demo issues</button></div>
+        <div class="result" id="qualitySummary" role="status">Ready to validate records.</div>
+      </section>
+      <section class="panel">
+        <h2>Add a fictional record</h2>
+        <p class="sub">Add a sample row to see the table and analytics update. Use synthetic values only.</p>
+        <form id="addForm" class="form-grid">
+          <div><label for="newId">Synthetic ID</label><input id="newId" required pattern="SYN-[0-9]{3}" placeholder="SYN-113"></div>
+          <div><label for="newYear">Study year</label><select id="newYear"><option value="1">Year 1</option><option value="2">Year 2</option><option value="3">Year 3</option><option value="4">Year 4</option></select></div>
+          <div class="full"><label for="newCourse">Course</label><select id="newCourse"></select></div>
+          <div><label for="newScore">Score (0–100)</label><input id="newScore" type="number" min="0" max="100" required value="80"></div>
+          <div style="align-self:end"><button type="submit">Add record</button></div>
+        </form>
+        <div id="addMessage" class="result" role="status" hidden></div>
+      </section>
+    </div>
+    <div>
+      <section class="panel">
+        <h2>Course credit comparison</h2>
+        <p class="sub">Select courses from the supplied curriculum list. The total is calculated from the selected credits.</p>
+        <label for="courseSearch">Find a course</label><input id="courseSearch" type="search" placeholder="Search course code or title">
+        <div id="courseChoices" class="checklist" style="margin-top:12px;max-height:280px;overflow:auto"></div>
+        <div class="metric-grid">
+          <div class="metric"><small>Selected courses</small><strong id="selectedCount">0</strong></div>
+          <div class="metric"><small>Selected credits</small><strong id="selectedCredits">0</strong></div>
+        </div>
+        <div class="btn-row"><button class="secondary" id="selectCore" type="button">Select core examples</button><button class="secondary" id="clearCourses" type="button">Clear selection</button></div>
+      </section>
+      <section class="panel">
+        <h2>Score distribution</h2>
+        <p class="sub">Counts of filtered synthetic scores. This is descriptive only and does not make predictions about real students.</p>
+        <div id="scoreBars" class="bar-list"></div>
+      </section>
+      <section class="panel">
+        <h2>Report snapshot</h2>
+        <p class="sub">Create a concise report from the current filtered records and course selection.</p>
+        <div class="metric-grid">
+          <div class="metric"><small>Filtered records</small><strong id="reportRows">0</strong></div>
+          <div class="metric"><small>Mean score</small><strong id="reportMean">—</strong></div>
+          <div class="metric"><small>Course credits</small><strong id="reportCredits">0</strong></div>
+          <div class="metric"><small>Quality issues</small><strong id="reportIssues">0</strong></div>
+        </div>
+        <div class="btn-row"><button id="downloadReport" type="button">Download report (.txt)</button><button id="copySummary" class="secondary" type="button">Copy summary</button></div>
+        <div id="reportMessage" class="result" role="status" hidden></div>
+      </section>
+    </div>
+  </div>
+  <footer>
+    <strong>Project learning goals:</strong> synthetic-data handling, filtering, data validation, basic descriptive analytics, credit comparison and reporting. A production SIS integration would require institutional permission, authentication, access controls, privacy review and approved APIs; none is implemented here.
+  </footer>
+  <section class="panel" aria-labelledby="publishHeading" style="margin-top:16px">
+    <h2 id="publishHeading">Run locally or publish with GitHub Pages</h2>
+    <p class="sub">This prototype is a static website with no build step, external libraries, server, or API keys.</p>
+    <ol>
+      <li>Save the main page as <code>index.html</code> in your project folder.</li>
+      <li>Open <code>index.html</code> in a browser to run it locally.</li>
+      <li>Upload <code>index.html</code> and the project documentation to a GitHub repository.</li>
+      <li>In GitHub, open <strong>Settings → Pages</strong>, select deployment from the <code>main</code> branch and <code>/(root)</code>, then save.</li>
+    </ol>
+    <p class="sub" style="margin:10px 0 0">Publish only the synthetic demonstration data. Never commit real student records, SIS credentials, tokens, or other private institutional information.</p>
+  </section>
+</main>
+</div>
+<script>
+"use strict";
+const courses = [
+ {code:"CS101",name:"Computer Programming",credits:4,area:"Core CS"},
+ {code:"CS102",name:"Data Structures",credits:4,area:"Core CS"},
+ {code:"CS201",name:"Object Oriented Programming Concepts",credits:4,area:"Core CS"},
+ {code:"CS203",name:"Design and Analysis of Algorithms",credits:3,area:"Core CS"},
+ {code:"CS204",name:"Computer Organization and Architecture",credits:3,area:"Core CS"},
+ {code:"CS205",name:"Web-Enabled Technologies",credits:4,area:"Core CS"},
+ {code:"CS206",name:"Database Management Systems",credits:4,area:"Core CS"},
+ {code:"CS302",name:"Operating Systems",credits:4,area:"Core CS"},
+ {code:"CS306",name:"Computer Networks",credits:4,area:"Core CS"},
+ {code:"CS305",name:"Computer Vision",credits:3,area:"AI & Data"},
+ {code:"CS307",name:"Cloud Computing",credits:4,area:"Cloud & Security"},
+ {code:"CS415",name:"Ethical Hacking",credits:3,area:"Cloud & Security"},
+ {code:"DS101",name:"Introduction to AI and DS",credits:3,area:"AI & Data"},
+ {code:"DS201",name:"Artificial Intelligence",credits:3,area:"AI & Data"},
+ {code:"DS202",name:"Industry Coding Practice (Python/R)",credits:3,area:"AI & Data"},
+ {code:"DS304",name:"Machine Learning",credits:4,area:"AI & Data"},
+ {code:"DS305",name:"Data Wrangling and Visualization",credits:3,area:"AI & Data"},
+ {code:"DS306",name:"Deep Learning",credits:3,area:"AI & Data"},
+ {code:"DS307",name:"Big Data Systems",credits:3,area:"AI & Data"},
+ {code:"DS309",name:"Pattern Recognition",credits:3,area:"AI & Data"},
+ {code:"DS310",name:"Predictive Analytics",credits:3,area:"AI & Data"},
+ {code:"DS311",name:"Natural Language Processing",credits:3,area:"AI & Data"},
+ {code:"DS408",name:"Generative AI",credits:3,area:"AI & Data"},
+ {code:"DS401",name:"Human Computer Interaction",credits:3,area:"Design & Project"},
+ {code:"SP301",name:"Special Project",credits:3,area:"Design & Project"},
+ {code:"MG401",name:"Introduction to Entrepreneurship",credits:3,area:"Design & Project"}
+];
+let records = [
+ {id:"SYN-101",year:1,course:"CS101",credits:4,score:82},
+ {id:"SYN-102",year:1,course:"CS102",credits:4,score:76},
+ {id:"SYN-103",year:1,course:"DS101",credits:3,score:91},
+ {id:"SYN-104",year:2,course:"CS201",credits:4,score:68},
+ {id:"SYN-105",year:2,course:"CS206",credits:4,score:88},
+ {id:"SYN-106",year:2,course:"CS203",credits:3,score:73},
+ {id:"SYN-107",year:3,course:"DS304",credits:4,score:94},
+ {id:"SYN-108",year:3,course:"DS305",credits:3,score:81},
+ {id:"SYN-109",year:3,course:"CS307",credits:4,score:77},
+ {id:"SYN-110",year:4,course:"DS408",credits:3,score:86},
+ {id:"SYN-111",year:4,course:"SP301",credits:3,score:null},
+ {id:"SYN-112",year:4,course:"DS311",credits:3,score:105}
+];
+let selectedCourses = new Set(["CS101","CS206","CS307","DS304","DS305","DS408","SP301"]);
+const $ = id => document.getElementById(id);
+const courseMap = new Map(courses.map(c=>[c.code,c]));
+function escapeHtml(v) { return String(v ?? "").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function issuesFor(r) {
+ const out=[];
+ if (!r.id) out.push("missing ID");
+ if (!Number.isInteger(r.year)||r.year<1||r.year>4) out.push("invalid year");
+ if (!courseMap.has(r.course)) out.push("unknown course");
+ if (r.score===null||r.score===undefined||r.score==="") out.push("missing score");
+ else if (!Number.isFinite(Number(r.score))||Number(r.score)<0||Number(r.score)>100) out.push("invalid score");
+ return out;
+}
+function getIssues() {
+ const counts={missing:0,invalid:0,duplicate:0,unknown:0};
+ const ids=new Set();
+ records.forEach(r=>{
+   if (!r.id || r.score===null || r.score===undefined || r.score==="") counts.missing++;
+   if ((r.score!==null && r.score!==undefined && r.score!=="" && (!Number.isFinite(Number(r.score))||Number(r.score)<0||Number(r.score)>100)) || !Number.isInteger(r.year)||r.year<1||r.year>4) counts.invalid++;
+   if (ids.has(r.id)) counts.duplicate++; else ids.add(r.id);
+   if (!courseMap.has(r.course)) counts.unknown++;
+ });
+ return counts;
+}
+function filteredRecords() {
+ const year=$("yearFilter").value, min=Number($("minScore").value||0), q=$("search").value.trim().toLowerCase(), sort=$("sortBy").value;
+ let data=records.filter(r=>(year==="all"||String(r.year)===year) && (r.score===null || Number(r.score)>=min) && (r.id+" "+(courseMap.get(r.course)?.name||r.course)).toLowerCase().includes(q));
+ data.sort((a,b)=>sort==="score-high"?(Number(b.score??-1)-Number(a.score??-1)):sort==="score-low"?(Number(a.score??101)-Number(b.score??101)):sort==="credits"?(b.credits-a.credits):a.id.localeCompare(b.id));
+ return data;
+}
+function renderTable() {
+ const data=filteredRecords();
+ $("recordsBody").innerHTML=data.map(r=>{
+   const problems=issuesFor(r);
+   const label=problems.length?problems.join(", "):"Valid";
+   return `<tr><td>${escapeHtml(r.id)}</td><td>${escapeHtml(r.year)}</td><td>${escapeHtml(courseMap.get(r.course)?.name||r.course)}</td><td>${escapeHtml(r.credits)}</td><td>${r.score===null||r.score===undefined?"—":escapeHtml(r.score)}</td><td><span class="pill">${escapeHtml(label)}</span></td></tr>`;
+ }).join("");
+ $("tableNote").textContent=`Showing ${data.length} of ${records.length} fictional records. Missing scores remain visible so they can be audited.`;
+ const validScores=data.filter(r=>r.score!==null&&r.score!==undefined&&Number.isFinite(Number(r.score))&&Number(r.score)>=0&&Number(r.score)<=100).map(r=>Number(r.score));
+ const avg=validScores.length?validScores.reduce((a,b)=>a+b,0)/validScores.length:null;
+ $("statRows").textContent=data.length;
+ $("statAverage").textContent=avg===null?"—":avg.toFixed(1);
+ $("statCredits").textContent=courses.reduce((s,c)=>s+c.credits,0);
+ const issueCount=records.reduce((s,r)=>s+issuesFor(r).length,0)+getIssues().duplicate;
+ $("statIssues").textContent=issueCount;
+ $("reportRows").textContent=data.length;
+ $("reportMean").textContent=avg===null?"—":avg.toFixed(1);
+ $("reportCredits").textContent=[...selectedCourses].reduce((s,code)=>s+(courseMap.get(code)?.credits||0),0);
+ $("reportIssues").textContent=issueCount;
+ renderBars(data,validScores);
+}
+function renderBars(data,scores) {
+ const bins=[{label:"0–59",n:0},{label:"60–69",n:0},{label:"70–79",n:0},{label:"80–89",n:0},{label:"90–100",n:0}];
+ scores.forEach(s=>{const i=s<60?0:s<70?1:s<80?2:s<90?3:4;bins[i].n++;});
+ const max=Math.max(1,...bins.map(b=>b.n));
+ $("scoreBars").innerHTML=bins.map(b=>`<div class="bar-row"><span>${b.label}</span><div class="track"><div class="fill" style="width:${100*b.n/max}%"></div></div><strong>${b.n}</strong></div>`).join("")+`<p class="sub" style="margin:8px 0 0">${scores.length} valid score(s); ${data.length-scores.length} record(s) without a valid score.</p>`;
+}
+function runQualityChecks() {
+ const counts=getIssues(), dup=counts.duplicate;
+ const checks=[
+  ["Missing required values",counts.missing===0,`${counts.missing} record(s) with missing ID or score`],
+  ["Scores within 0–100",counts.invalid===0,`${counts.invalid} record(s) with invalid score or year`],
+  ["Unique synthetic IDs",dup===0,`${dup} duplicate ID occurrence(s)`],
+  ["Course codes exist",counts.unknown===0,`${counts.unknown} unknown course code(s)`]
+ ];
+ $("qualityResults").innerHTML=checks.map(([label,ok,detail])=>`<div class="check"><span>${ok?"✅":"⚠️"}</span><div><strong>${label}</strong><br><span style="color:var(--muted)">${detail}</span></div></div>`).join("");
+ $("qualitySummary").textContent=checks.every(x=>x[1])?"All current data checks passed.":"Review the issues above. Use “Repair demo issues” to fix the intentionally flawed sample records.";
+}
+function renderCourses() {
+ const q=$("courseSearch").value.trim().toLowerCase();
+ const visible=courses.filter(c=>(c.code+" "+c.name+" "+c.area).toLowerCase().includes(q));
+ $("courseChoices").innerHTML=visible.map(c=>`<label class="check"><input type="checkbox" data-course="${c.code}" ${selectedCourses.has(c.code)?"checked":""}><span><strong>${c.code}</strong> — ${escapeHtml(c.name)} <span style="color:var(--muted)">(${c.credits} cr)</span></span></label>`).join("");
+ $("courseChoices").querySelectorAll("input[data-course]").forEach(el=>el.addEventListener("change",()=>{
+   if(el.checked)selectedCourses.add(el.dataset.course);else selectedCourses.delete(el.dataset.course);
+   updateCourseTotals();renderTable();
+ }));
+ updateCourseTotals();
+}
+function updateCourseTotals() {
+ const selected=courses.filter(c=>selectedCourses.has(c.code));
+ $("selectedCount").textContent=selected.length;
+ $("selectedCredits").textContent=selected.reduce((s,c)=>s+c.credits,0);
+ $("reportCredits").textContent=selected.reduce((s,c)=>s+c.credits,0);
+}
+function download(name,content,type) {
+ const blob=new Blob([content],{type}); const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+function csvCell(v){return '"'+String(v??"").replace(/"/g,'""')+'"';}
+function reportText() {
+ const data=filteredRecords(), valid=data.filter(r=>r.score!==null&&r.score!==undefined&&Number.isFinite(Number(r.score))&&Number(r.score)>=0&&Number(r.score)<=100).map(r=>Number(r.score));
+ const mean=valid.length?valid.reduce((a,b)=>a+b,0)/valid.length:null;
+ const selected=courses.filter(c=>selectedCourses.has(c.code));
+ return `STUDENT INSIGHTS LAB — SYNTHETIC DATA REPORT\nGenerated: ${new Date().toLocaleString()}\n\nPRIVACY NOTE\nThis report uses fictional demonstration data only. It is not connected to an SIS.\n\nFILTERED RECORDS: ${data.length} of ${records.length}\nVALID SCORES: ${valid.length}\nMEAN VALID SCORE: ${mean===null?"N/A":mean.toFixed(2)}\nDATA QUALITY ISSUE COUNT: ${records.reduce((s,r)=>s+issuesFor(r).length,0)+getIssues().duplicate}\n\nSELECTED COURSES (${selected.length})\n${selected.map(c=>`${c.code} | ${c.name} | ${c.credits} credits`).join("\n")||"None selected"}\nTOTAL SELECTED COURSE CREDITS: ${selected.reduce((s,c)=>s+c.credits,0)}\n\nLIMITATIONS\nThis is a teaching prototype using synthetic records and descriptive statistics. It does not determine academic standing, predict student outcomes or integrate with real university systems. Validate all outputs before using them in a report.\n`;
+}
+function init() {
+ $("newCourse").innerHTML=courses.map(c=>`<option value="${c.code}">${c.code} — ${escapeHtml(c.name)} (${c.credits} cr)</option>`).join("");
+ ["yearFilter","minScore","search","sortBy"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",renderTable));
+ $("resetFilters").addEventListener("click",()=>{$("yearFilter").value="all";$("minScore").value=0;$("search").value="";$("sortBy").value="id";renderTable();});
+ $("exportCsv").addEventListener("click",()=>{
+  const data=filteredRecords(); const rows=[["synthetic_id","study_year","course_code","course_title","credits","score","data_status"],...data.map(r=>[r.id,r.year,r.course,courseMap.get(r.course)?.name||r.course,r.credits,r.score,issuesFor(r).join("; ")||"Valid"])];
+  download("synthetic_student_records.csv",rows.map(row=>row.map(csvCell).join(",")).join("\r\n"),"text/csv;charset=utf-8");
+ });
+ $("runChecks").addEventListener("click",runQualityChecks);
+ $("repairData").addEventListener("click",()=>{
+  records=records.filter((r,i)=>records.findIndex(x=>x.id===r.id)===i).map(r=>({...r,score:r.score===null||r.score===undefined?75:Math.max(0,Math.min(100,Number(r.score)||0)),year:Math.min(4,Math.max(1,Number(r.year)||1))}));
+  renderTable();runQualityChecks();$("qualitySummary").textContent="Demo data repaired: missing scores filled with 75 for demonstration and invalid scores clamped to 0–100. These are illustrative repairs, not valid methods for real academic records.";
+ });
+ $("addForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const id=$("newId").value.trim(),year=Number($("newYear").value),course=$("newCourse").value,score=Number($("newScore").value);
+  const msg=$("addMessage");msg.hidden=false;
+  if(records.some(r=>r.id===id)){msg.textContent="That synthetic ID already exists. Choose a new ID.";return;}
+  if(!/^SYN-[0-9]{3}$/.test(id)||!Number.isInteger(score)||score<0||score>100){msg.textContent="Please use an ID like SYN-113 and a whole-number score from 0 to 100.";return;}
+  const c=courseMap.get(course);records.push({id,year,course,credits:c.credits,score});
+  $("newId").value="";renderTable();runQualityChecks();msg.textContent=`Added ${id} using fictional data.`; 
+ });
+ $("courseSearch").addEventListener("input",renderCourses);
+ $("selectCore").addEventListener("click",()=>{selectedCourses=new Set(["CS101","CS102","CS201","CS203","CS206","CS302","CS306"]);renderCourses();renderTable();});
+ $("clearCourses").addEventListener("click",()=>{selectedCourses.clear();renderCourses();renderTable();});
+ $("downloadReport").addEventListener("click",()=>download("student_insights_report.txt",reportText(),"text/plain;charset=utf-8"));
+ $("copySummary").addEventListener("click",async()=>{
+  const msg=$("reportMessage");msg.hidden=false;
+  try { await navigator.clipboard.writeText(reportText());msg.textContent="Report summary copied to clipboard."; }
+  catch(e) { msg.textContent="Clipboard access was blocked. Use Download report (.txt) to save the report instead."; }
+ });
+ renderCourses();renderTable();runQualityChecks();
+}
+init();
+</script>
+</body>
+</html>

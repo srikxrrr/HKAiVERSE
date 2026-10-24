@@ -1,0 +1,13 @@
+synthetic_id,study_year,course_code,course_title,credits,score
+SYN-101,1,CS101,Computer Programming,4,82
+SYN-102,1,CS102,Data Structures,4,76
+SYN-103,1,DS101,Introduction to AI and DS,3,91
+SYN-104,2,CS201,Object Oriented Programming Concepts,4,68
+SYN-105,2,CS206,Database Management Systems,4,88
+SYN-106,2,CS203,Design and Analysis of Algorithms,3,73
+SYN-107,3,DS304,Machine Learning,4,94
+SYN-108,3,DS305,Data Wrangling and Visualization,3,81
+SYN-109,3,CS307,Cloud Computing,4,77
+SYN-110,4,DS408,Generative AI,3,86
+SYN-111,4,SP301,Special Project,3,
+SYN-112,4,DS311,Natural Language Processing,3,105
